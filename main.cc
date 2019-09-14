@@ -1,4 +1,5 @@
 #include <iostream>
+#include <iomanip>
 #include <vector>
 #include <cstdint>
 
@@ -7,6 +8,18 @@ uint32_t	reg[8];				// 汎用レジスタ
 uint32_t	eip;				// プログラムカウンタ
 std::vector<uint8_t> memory		// メモリ
 			= { 0x90, 0xf4 };	// プログラム
+
+#define EIP		eip
+#define EAX		reg[0]
+#define ECX		reg[1]
+#define EDX		reg[2]
+#define EBX		reg[3]
+#define ESP		reg[4]
+#define EBP		reg[5]
+#define ESI		reg[6]
+#define EDI		reg[7]
+
+void dump();
 
 int main(int argc, char **argv){
 	halt_flag	= false;
@@ -42,5 +55,29 @@ int main(int argc, char **argv){
 		}
 		eip += op_size;
 	}
+
+	dump();
+
 	return 0;
+}
+
+void dump(){
+	using std::endl;
+
+	auto w		= std::setw(2 * 32 / 8);
+	auto fill	= std::setfill('0');
+
+	std::cout
+		<< "--- dump registers ---" << endl
+		<< std::hex
+		<< "EIP = 0x" << w << fill << EIP << endl << endl
+		<< "EAX = 0x" << w << EAX << endl
+		<< "ECX = 0x" << w << ECX << endl
+		<< "EDX = 0x" << w << EDX << endl
+		<< "EBX = 0x" << w << EBX << endl
+		<< "ESP = 0x" << w << ESP << endl
+		<< "EBP = 0x" << w << EBP << endl
+		<< "ESI = 0x" << w << ESI << endl
+		<< "EDI = 0x" << w << EDI << endl
+		<< "----------------------" << endl;
 }
