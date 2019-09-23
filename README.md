@@ -1,6 +1,6 @@
 # x86emu_example
 
-技術書典7で頒布した"OtakuAssembly Vol.1"のサンプルコードです．
+技術書典7で頒布した"OtakuAssembly Vol.1"のサンプルコードです(すみません途中です)．
 
 ## ビルド・実行
 
