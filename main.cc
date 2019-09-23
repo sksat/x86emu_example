@@ -6,8 +6,7 @@
 bool		halt_flag = false;
 uint32_t	reg[8];				// 汎用レジスタ
 uint32_t	eip;				// プログラムカウンタ
-std::vector<uint8_t> memory		// メモリ
-			= { 0x90, 0xf4 };	// プログラム
+std::vector<uint8_t> memory;	// メモリ
 
 #define EIP		eip
 #define EAX		reg[0]
@@ -19,9 +18,21 @@ std::vector<uint8_t> memory		// メモリ
 #define ESI		reg[6]
 #define EDI		reg[7]
 
+void load_ipl(FILE *fp, std::vector<uint8_t> &memory, const uint32_t addr, const size_t size);
 void dump();
 
 int main(int argc, char **argv){
+	FILE *fp = nullptr;
+
+	// open floppy image file
+	fp = fopen("floppy.img", "rb");
+	if(fp == nullptr){
+		std::cerr << "cannot open floppy image file!" << std::endl;
+		return -1;
+	}
+
+	load_ipl(fp, memory, 0x7c00, 512);
+
 	halt_flag	= false;
 	eip			= 0x00000000;
 
@@ -59,6 +70,10 @@ int main(int argc, char **argv){
 	dump();
 
 	return 0;
+}
+
+void load_ipl(FILE *fp, std::vector<uint8_t> &memory, const uint32_t addr, const size_t size){
+	fread(&memory[addr], sizeof(uint8_t), size, fp);
 }
 
 void dump(){
